@@ -4,6 +4,7 @@ import { ENV } from "./config/env.js";
 import { serve } from "inngest/express";
 import { connectDB as connect } from "./config/db.js";
 import { inngest } from "./config/inngest.js";
+import { inngest, functions } from "./src/inngest"
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(clerkMiddleware());
 
 app.use(express.json());
 // Set up the "/api/inngest" (recommended) routes with the serve handler
-app.use("/api/inngest", serve({ client: inngest, functions }));
+app.use("/api/inngest", serve({ client: inngest, functions}));
 
 console.log("mongo uri:", ENV.MONGO_URI);
 
