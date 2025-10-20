@@ -1,6 +1,7 @@
 import express from "express";
 import { clerkMiddleware } from "@clerk/express";
 import { ENV } from "./config/env.js";
+import { serve } from "inngest/express";
 import { connectDB as connect } from "./config/db.js";
 import { inngest } from "./config/inngest.js";
 
