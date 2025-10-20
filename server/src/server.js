@@ -1,37 +1,39 @@
 import express from "express";
-import { clerkMiddleware } from "@clerk/express";
 import { ENV } from "./config/env.js";
+import { connectDB } from "./config/db.js";
+import { clerkMiddleware } from "@clerk/express";
+import { functions, inngest } from "./config/inngest.js";
 import { serve } from "inngest/express";
-import { connectDB as connect } from "./config/db.js";
-import { inngest, functions } from "./src/inngest"
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello World!1234");
+app.use(express.json());
+
+app.use(clerkMiddleware()); // req.auth will be available in the request object
+
+app.get("/debug-sentry", (req, res) => {
+  throw new Error("My first Sentry error!");
 });
 
-app.use(clerkMiddleware());
+app.get("/", (req, res) => {
+  res.send("Hello World! 123");
+});
 
-app.use(express.json());
-// Set up the "/api/inngest" (recommended) routes with the serve handler
-app.use("/api/inngest", serve({ client: inngest, functions}));
+app.use("/api/inngest", serve({ client: inngest, functions }));
 
 console.log("mongo uri:", ENV.MONGO_URI);
 
 const startServer = async () => {
   try {
-    await connect();
-    if (ENV.NODE_ENV != "production") {
+    await connectDB();
+    if (ENV.NODE_ENV !== "production") {
       app.listen(ENV.PORT, () => {
-        console.log(
-          `Server running in ${ENV.NODE_ENV} mode on port ${ENV.PORT}`
-        );
+        console.log("Server started on port:", ENV.PORT);
       });
     }
   } catch (error) {
     console.error("Error starting server:", error);
-    process.exit(1);
+    process.exit(1); // Exit the process with a failure code
   }
 };
 
