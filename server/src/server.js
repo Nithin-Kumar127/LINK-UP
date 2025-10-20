@@ -11,17 +11,13 @@ app.use(express.json());
 
 app.use(clerkMiddleware()); // req.auth will be available in the request object
 
-app.get("/debug-sentry", (req, res) => {
-  throw new Error("My first Sentry error!");
-});
+
 
 app.get("/", (req, res) => {
   res.send("Hello World! 123");
 });
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
-
-console.log("mongo uri:", ENV.MONGO_URI);
 
 const startServer = async () => {
   try {
