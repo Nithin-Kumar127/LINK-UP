@@ -1,6 +1,6 @@
 import { Inngest } from "inngest";
 import { connect } from "mongoose";
-import { UserModel } from "../models/Usermodel";
+import { User } from "../models/Usermodel.js";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "link-up" });  
@@ -41,4 +41,3 @@ const DeleteUser = inngest.createFunction(
 
 // Create an empty array where we'll export future Inngest functions
 export const functions = [syncUser , DeleteUser];
-    
